@@ -34,9 +34,9 @@ public class HudParser {
     public void parse(List<String> cfgFile) {
         BiConsumer<String, HudParser> scope = null;
         for (String line : cfgFile) {
-            if (line.isEmpty())
-                continue;
             line = line.trim();
+            if (line.isEmpty() || line.startsWith("#"))
+                continue;
             if (line.startsWith("-") && line.endsWith("-")) {
                 line = line.substring(1, line.length() - 1).trim();
                 scope = getScope(line.toLowerCase());

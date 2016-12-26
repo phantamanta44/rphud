@@ -1,6 +1,5 @@
 package io.github.phantamanta44.rphud.hud;
 
-import com.fathzer.soft.javaluator.Parameters;
 import io.github.phantamanta44.rphud.RPHud;
 import io.github.phantamanta44.rphud.hud.component.IComponent;
 import io.github.phantamanta44.rphud.hud.component.IComponentProvider;

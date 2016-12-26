@@ -16,38 +16,49 @@ public class ExpressionEngine extends DoubleEvaluator {
 
     protected final List<Pair<String, String>> defined = new LinkedList<>();
 
+    private StaticVariableSet<Double> vars = null;
+
     public ExpressionEngine() {
         super(getParameters());
     }
 
-    public double evaluate(String expr, ExprContext ctx) {
-        StaticVariableSet<Double> vars = new StaticVariableSet<>();
+    public void context(ExprContext ctx) {
+        vars = new StaticVariableSet<>();
         ctx.vars.forEach((n, s) -> vars.set(n, s.getAsDouble()));
         defined.forEach(v -> vars.set(v.getLeft(), evaluate(v.getRight(), vars)));
+    }
+
+    public void exitContext() {
+        vars = null;
+    }
+
+    public double eval(String expr) {
+        if (vars == null)
+            throw new IllegalStateException("No context available!");
         return evaluate(expr, vars);
     }
 
-    public int evaluateInt(String expr, ExprContext ctx) {
-        return (int)Math.floor(evaluate(expr, ctx));
+    public int evalInt(String expr) {
+        return (int)Math.floor(evaluate(expr));
     }
 
-    public long evaluateLong(String expr, ExprContext ctx) {
-        return (long)Math.floor(evaluate(expr, ctx));
+    public long evalLong(String expr) {
+        return (long)Math.floor(evaluate(expr));
     }
 
-    public float evaluateFloat(String expr, ExprContext ctx) {
-        return (float)evaluate(expr, ctx);
+    public float evalFloat(String expr) {
+        return (float)eval(expr);
     }
 
-    public String evaluateStr(String expr, ExprContext ctx) {
-        return Long.toString(evaluateLong(expr, ctx));
+    public String evalStr(String expr) {
+        return Long.toString(evalLong(expr));
     }
 
-    public String formatStr(String text, ExprContext ctx) {
+    public String formatStr(String text) {
         Matcher m = FMT_REGEX.matcher(text);
         StringBuffer buf = new StringBuffer();
         while (m.find())
-            m.appendReplacement(buf, evaluateStr(m.group(1), ctx));
+            m.appendReplacement(buf, evalStr(m.group(1)));
         m.appendTail(buf);
         return buf.toString();
     }

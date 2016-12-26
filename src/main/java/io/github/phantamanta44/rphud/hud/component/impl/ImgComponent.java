@@ -28,11 +28,12 @@ public class ImgComponent implements IComponent {
 
     @Override
     public void render(Minecraft mc, ScaledResolution res, ExpressionEngine eval) {
-        ExprContext ctx = new ExprContext(mc.ingameGUI, mc.thePlayer, res);
-        int x = eval.evaluateInt(xExpr, ctx);
-        int y = eval.evaluateInt(yExpr, ctx);
-        int w = eval.evaluateInt(wExpr, ctx);
-        int h = eval.evaluateInt(hExpr, ctx);
+        eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
+        int x = eval.evalInt(xExpr);
+        int y = eval.evalInt(yExpr);
+        int w = eval.evalInt(wExpr);
+        int h = eval.evalInt(hExpr);
+        eval.exitContext();
         x = align.offsetX(x, w, res.getScaledWidth());
         y = align.offsetY(y, h, res.getScaledHeight());
         mc.renderEngine.bindTexture(resource);
