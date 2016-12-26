@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rphud",
+  "name": "Resource Pack HUD",
+  "description": "Allows resource pack authors to modify the structure of the in-game HUD.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["phantamanta44"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
