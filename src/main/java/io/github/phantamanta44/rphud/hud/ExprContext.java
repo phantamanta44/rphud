@@ -19,12 +19,13 @@ public class ExprContext {
         vars.put("time", pl.getEntityWorld()::getWorldTime);
         vars.put("daytime", () -> pl.getEntityWorld().getWorldTime() % 24000L);
         vars.put("hp", pl::getHealth);
-        vars.put("hpmax", pl::getMaxHealth);
+        vars.put("hp_max", pl::getMaxHealth);
         vars.put("xp", () -> pl.experience);
         vars.put("level", () -> pl.experienceLevel);
         vars.put("score", pl::getScore);
         FoodStats fs = pl.getFoodStats();
-        vars.put("hunger", fs::getFoodLevel);
+        vars.put("food", fs::getFoodLevel);
+        vars.put("food_max", () -> 20D);
         vars.put("sat", fs::getSaturationLevel);
     }
 

@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class ExpressionEngine extends DoubleEvaluator {
 
+    private static final long FULL_ALPHA = 255L << 24;
     private static final Pattern FMT_REGEX = Pattern.compile("\\$\\{(.+?)}");
 
     protected final List<Pair<String, String>> defined = new LinkedList<>();
@@ -39,15 +40,15 @@ public class ExpressionEngine extends DoubleEvaluator {
     }
 
     public int evalInt(String expr) {
-        return (int)Math.floor(evaluate(expr));
+        return Long.valueOf(evalLong(expr)).intValue();
     }
 
     public long evalLong(String expr) {
-        return (long)Math.floor(evaluate(expr));
+        return Double.valueOf(Math.floor(eval(expr))).longValue();
     }
 
     public float evalFloat(String expr) {
-        return (float)eval(expr);
+        return Double.valueOf(eval(expr)).floatValue();
     }
 
     public String evalStr(String expr) {
@@ -76,7 +77,8 @@ public class ExpressionEngine extends DoubleEvaluator {
                 return (double)(
                         ((long)Math.floor(args.next()) << 16) |
                         ((long)Math.floor(args.next()) << 8) |
-                        (long)Math.floor(args.next())
+                        (long)Math.floor(args.next()) |
+                        FULL_ALPHA
                 );
             case "rgba":
                 return (double)(

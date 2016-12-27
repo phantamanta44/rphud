@@ -11,6 +11,7 @@ import io.github.phantamanta44.rphud.util.Lambdas;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -43,12 +44,14 @@ public class HudManager {
     public void clearCache() {
         toCancel.clear();
         components.clear();
+        eval.exitContext();
         eval.defined.clear();
         failed = false;
     }
 
     public void rebuild(List<String> cfgFile) {
         clearCache();
+        MutableBoolean failed = new MutableBoolean(false);
         try {
             new HudParser().withDefinitionHandler((n, e) ->
                 eval.defined.add(Pair.of(n, e))
@@ -62,6 +65,7 @@ public class HudManager {
                 } catch (Exception e) {
                     RPHud.warn("Errored on cancel directive!");
                     RPHud.getLogger().warn(e);
+                    failed.setTrue();
                 }
             }).withComponentHandler((n, c) -> {
                 try {
@@ -73,12 +77,16 @@ public class HudManager {
                 } catch (Exception e) {
                     RPHud.warn("Errored on component statement!");
                     RPHud.warn(e);
+                    failed.setTrue();
                 }
             }).parse(cfgFile);
         } catch (Exception e) {
             RPHud.error("General parsing failure!");
             RPHud.error(e);
+            failed.setTrue();
         }
+        if (failed.booleanValue())
+            clearCache();
     }
 
     public boolean shouldCancel(RenderGameOverlayEvent.ElementType type) {
