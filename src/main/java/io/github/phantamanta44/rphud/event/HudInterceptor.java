@@ -16,9 +16,4 @@ public class HudInterceptor {
             RPHud.INSTANCE.getRenderer().doRender(true);
     }
 
-    @SubscribeEvent
-    public void onRender(RenderGameOverlayEvent.Post event) {
-
-    }
-
 }
