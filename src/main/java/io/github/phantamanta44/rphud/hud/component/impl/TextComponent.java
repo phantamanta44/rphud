@@ -1,20 +1,20 @@
 package io.github.phantamanta44.rphud.hud.component.impl;
 
-import io.github.phantamanta44.rphud.hud.ExprContext;
 import io.github.phantamanta44.rphud.hud.ExpressionEngine;
-import io.github.phantamanta44.rphud.hud.component.IComponent;
+import io.github.phantamanta44.rphud.hud.component.AbstractComponent;
 import io.github.phantamanta44.rphud.util.DeserializingMap;
 import io.github.phantamanta44.rphud.util.ScreenAlign;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 
-public class TextComponent implements IComponent {
+public class TextComponent extends AbstractComponent {
 
     private final ScreenAlign align;
     private final String textExpr, xExpr, yExpr, colExpr;
     private final boolean shadow;
 
     public TextComponent(DeserializingMap cfg) {
+        super(cfg);
         this.align = cfg.has("align") ? ScreenAlign.parse(cfg.getString("align")) : ScreenAlign.TOP_LEFT;
         this.xExpr = cfg.getString("x");
         this.yExpr = cfg.getString("y");

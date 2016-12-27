@@ -8,4 +8,6 @@ public interface IComponent {
 
     void render(Minecraft mc, ScaledResolution res, ExpressionEngine eval);
 
+    boolean renderUnderHud();
+
 }

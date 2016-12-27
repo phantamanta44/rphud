@@ -93,11 +93,11 @@ public class HudManager {
         return toCancel.contains(type);
     }
 
-    public void doRender() {
+    public void doRender(boolean afterHud) {
         if (!failed) {
             ScaledResolution res = new ScaledResolution(mc);
             eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
-            components.forEach(c -> {
+            components.stream().filter(c -> c.renderUnderHud() != afterHud).forEach(c -> {
                 try {
                     c.render(mc, res, eval);
                 } catch (Exception e) {

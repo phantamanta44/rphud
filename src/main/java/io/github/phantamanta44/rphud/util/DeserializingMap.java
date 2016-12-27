@@ -53,7 +53,7 @@ public class DeserializingMap {
 
     public boolean getBool(String key) {
         keyCheck(key);
-        switch (key.toLowerCase()) {
+        switch (get(key).toLowerCase()) {
             case "true":
             case "yes":
             case "on":

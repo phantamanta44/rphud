@@ -1,23 +1,23 @@
 package io.github.phantamanta44.rphud.hud.component.impl;
 
-import io.github.phantamanta44.rphud.hud.ExprContext;
 import io.github.phantamanta44.rphud.hud.ExpressionEngine;
-import io.github.phantamanta44.rphud.hud.component.IComponent;
+import io.github.phantamanta44.rphud.hud.component.AbstractComponent;
 import io.github.phantamanta44.rphud.util.DeserializingMap;
+import io.github.phantamanta44.rphud.util.Renders;
 import io.github.phantamanta44.rphud.util.ScreenAlign;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class ImgComponent implements IComponent {
+public class ImgComponent extends AbstractComponent {
 
     private final ScreenAlign align;
     private final String xExpr, yExpr, wExpr, hExpr, uExpr, vExpr, twExpr, thExpr, aExpr;
     private final ResourceLocation resource;
 
     public ImgComponent(DeserializingMap cfg) {
+        super(cfg);
         this.align = cfg.has("align") ? ScreenAlign.parse(cfg.getString("align")) : ScreenAlign.TOP_LEFT;
         this.xExpr = cfg.getString("x");
         this.yExpr = cfg.getString("y");
@@ -45,9 +45,9 @@ public class ImgComponent implements IComponent {
         x = align.offsetX(x, w, res.getScaledWidth());
         y = align.offsetY(y, h, res.getScaledHeight());
         mc.renderEngine.bindTexture(resource);
-        GlStateManager.color(1F, 1F, 1F, a);
-        Gui.drawModalRectWithCustomSizedTexture(x, y, u, v, w, h, tw, th);
-        GlStateManager.color(1F, 1F, 1F, 1F);
+        Renders.alpha(a);
+        Renders.textureUnderHud(x, y, u, v, w, h, tw, th);
+        Renders.alpha(1F);
     }
 
 }
