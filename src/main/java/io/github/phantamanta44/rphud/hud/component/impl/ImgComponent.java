@@ -7,7 +7,6 @@ import io.github.phantamanta44.rphud.util.Renders;
 import io.github.phantamanta44.rphud.util.ScreenAlign;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImgComponent extends AbstractComponent {
