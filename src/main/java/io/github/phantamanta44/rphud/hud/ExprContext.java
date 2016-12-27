@@ -18,6 +18,8 @@ public class ExprContext {
         vars.put("systime", System::currentTimeMillis);
         vars.put("time", pl.getEntityWorld()::getWorldTime);
         vars.put("daytime", () -> pl.getEntityWorld().getWorldTime() % 24000L);
+        vars.put("vp_width", res::getScaledWidth);
+        vars.put("vp_height", res::getScaledHeight);
         vars.put("hp", pl::getHealth);
         vars.put("hp_max", pl::getMaxHealth);
         vars.put("xp", () -> pl.experience);
