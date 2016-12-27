@@ -15,7 +15,7 @@ public class RectComponent implements IComponent {
     private final String xExpr, yExpr, wExpr, hExpr, colExpr;
 
     public RectComponent(DeserializingMap cfg) {
-        this.align = ScreenAlign.parse(cfg.getString("align"));
+        this.align = cfg.has("align") ? ScreenAlign.parse(cfg.getString("align")) : ScreenAlign.TOP_LEFT;
         this.xExpr = cfg.getString("x");
         this.yExpr = cfg.getString("y");
         this.wExpr = cfg.getString("width");

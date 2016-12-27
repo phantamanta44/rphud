@@ -12,13 +12,15 @@ public class TextComponent implements IComponent {
 
     private final ScreenAlign align;
     private final String textExpr, xExpr, yExpr, colExpr;
+    private final boolean shadow;
 
     public TextComponent(DeserializingMap cfg) {
-        this.align = ScreenAlign.parse(cfg.getString("align"));
+        this.align = cfg.has("align") ? ScreenAlign.parse(cfg.getString("align")) : ScreenAlign.TOP_LEFT;
         this.xExpr = cfg.getString("x");
         this.yExpr = cfg.getString("y");
         this.textExpr = cfg.getString("text");
         this.colExpr = cfg.getString("colour");
+        this.shadow = !cfg.has("shadow") || cfg.getBool("shadow");
     }
 
     @Override
@@ -31,7 +33,7 @@ public class TextComponent implements IComponent {
         eval.exitContext();
         x = align.offsetX(x, mc.fontRendererObj.getStringWidth(text), res.getScaledWidth());
         y = align.offsetY(y, mc.fontRendererObj.FONT_HEIGHT, res.getScaledHeight());
-        mc.fontRendererObj.drawStringWithShadow(text, x, y, colour);
+        mc.fontRendererObj.drawString(text, x, y, colour, shadow);
     }
 
 }
