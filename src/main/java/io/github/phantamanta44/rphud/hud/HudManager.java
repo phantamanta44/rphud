@@ -96,6 +96,7 @@ public class HudManager {
     public void doRender() {
         if (!failed) {
             ScaledResolution res = new ScaledResolution(mc);
+            eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
             components.forEach(c -> {
                 try {
                     c.render(mc, res, eval);
@@ -107,6 +108,7 @@ public class HudManager {
                     failed = true;
                 }
             });
+            eval.exitContext();
         }
     }
 

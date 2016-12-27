@@ -33,7 +33,6 @@ public class ImgComponent implements IComponent {
 
     @Override
     public void render(Minecraft mc, ScaledResolution res, ExpressionEngine eval) {
-        eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
         int x = eval.evalInt(xExpr);
         int y = eval.evalInt(yExpr);
         int w = eval.evalInt(wExpr);
@@ -43,7 +42,6 @@ public class ImgComponent implements IComponent {
         int tw = twExpr != null ? eval.evalInt(twExpr) : w;
         int th = thExpr != null ? eval.evalInt(thExpr) : h;
         float a = aExpr != null ? eval.evalFloat(aExpr) : 1;
-        eval.exitContext();
         x = align.offsetX(x, w, res.getScaledWidth());
         y = align.offsetY(y, h, res.getScaledHeight());
         mc.renderEngine.bindTexture(resource);

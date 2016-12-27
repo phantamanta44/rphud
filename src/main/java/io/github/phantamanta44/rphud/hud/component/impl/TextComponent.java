@@ -25,12 +25,10 @@ public class TextComponent implements IComponent {
 
     @Override
     public void render(Minecraft mc, ScaledResolution res, ExpressionEngine eval) {
-        eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
         int x = eval.evalInt(xExpr);
         int y = eval.evalInt(yExpr);
         String text = eval.formatStr(textExpr);
         int colour = eval.evalInt(colExpr);
-        eval.exitContext();
         x = align.offsetX(x, mc.fontRendererObj.getStringWidth(text), res.getScaledWidth());
         y = align.offsetY(y, mc.fontRendererObj.FONT_HEIGHT, res.getScaledHeight());
         mc.fontRendererObj.drawString(text, x, y, colour, shadow);

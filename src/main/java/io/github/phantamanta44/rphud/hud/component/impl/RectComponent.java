@@ -25,13 +25,11 @@ public class RectComponent implements IComponent {
 
     @Override
     public void render(Minecraft mc, ScaledResolution res, ExpressionEngine eval) {
-        eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
         int x = eval.evalInt(xExpr);
         int y = eval.evalInt(yExpr);
         int w = eval.evalInt(wExpr);
         int h = eval.evalInt(hExpr);
         int colour = eval.evalInt(colExpr);
-        eval.exitContext();
         x = align.offsetX(x, w, res.getScaledWidth());
         y = align.offsetY(y, h, res.getScaledHeight());
         Gui.drawRect(x, y, x + w, y + h, colour);
