@@ -87,6 +87,18 @@ public class ExpressionEngine extends DoubleEvaluator {
                         (long)Math.floor(args.next()) |
                         ((long)Math.floor(args.next()) << 24)
                 );
+            case "lt":
+                return (args.next() < args.next()) ? 1D : 0D;
+            case "gt":
+                return (args.next() > args.next()) ? 1D : 0D;
+            case "lte":
+                return (args.next() <= args.next()) ? 1D : 0D;
+            case "gte":
+                return (args.next() >= args.next()) ? 1D : 0D;
+            case "eq":
+                return args.next().equals(args.next()) ? 1D : 0D;
+            case "ne":
+                return !args.next().equals(args.next()) ? 1D : 0D;
             default:
                 return super.evaluate(function, args, ctx);
         }
@@ -120,6 +132,12 @@ public class ExpressionEngine extends DoubleEvaluator {
         params.add(new Function("hsb", 3));
         params.add(new Function("rgb", 3));
         params.add(new Function("rgba", 4));
+        params.add(new Function("lt", 2));
+        params.add(new Function("gt", 2));
+        params.add(new Function("lte", 2));
+        params.add(new Function("gte", 2));
+        params.add(new Function("eq", 2));
+        params.add(new Function("ne", 2));
         return params;
     }
 
