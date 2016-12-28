@@ -22,10 +22,11 @@ public class ExpressionEngine extends DoubleEvaluator {
 
     private static final long FULL_ALPHA = 255L << 24;
     private static final Pattern FMT_REGEX = Pattern.compile("\\$\\{(.+?)}");
-    private static final Map<String, Pair<Function, ToDoubleBiFunction<Iterator<Double>, ExprContext>>> funcs;
-    private static final Map<String, Pair<Operator, ToDoubleBiFunction<Iterator<Double>, ExprContext>>> ops;
+    private static final Map<String, Pair<Function, ToDoubleBiFunction<Iterator<Double>, ExpressionEngine>>> funcs;
+    private static final Map<String, Pair<Operator, ToDoubleBiFunction<Iterator<Double>, ExpressionEngine>>> ops;
 
     protected final List<Pair<String, String>> defined = new LinkedList<>();
+    protected final Map<Long, Double> register = new HashMap<>();
 
     private StaticVariableSet<Double> vars = null;
     private ExprContext gctx = null;
@@ -78,7 +79,7 @@ public class ExpressionEngine extends DoubleEvaluator {
     }
     
     static {
-        funcs = Stream.<Pair<Function, ToDoubleBiFunction<Iterator<Double>, ExprContext>>>of(
+        funcs = Stream.<Pair<Function, ToDoubleBiFunction<Iterator<Double>, ExpressionEngine>>>of(
                 Pair.of(new Function("hsb", 3), (a, c) ->
                         Color.HSBtoRGB(f(a), f(a), f(a))
                 ),
@@ -114,13 +115,24 @@ public class ExpressionEngine extends DoubleEvaluator {
                 ),
                 Pair.of(new Function("itemcount", 1, 2), (a, c) -> {
                     ItemSig sig = new ItemSig(i(a), a.hasNext() ? i(a) : -1);
-                    return Inventories.stream(c.pl.inventory)
+                    return Inventories.stream(c.gctx.pl.inventory)
                             .filter(sig::matches)
                             .mapToInt(is -> is.stackSize)
                             .sum();
+                }),
+                Pair.of(new Function("put", 2), (a, c) -> {
+                    Double val = c.register.put(l(a), d(a));
+                    return val != null ? val : 0;
+                }),
+                Pair.of(new Function("has", 1), (a, c) ->
+                        c.register.containsKey(l(a)) ? 1 : 0
+                ),
+                Pair.of(new Function("get", 1), (a, c) -> {
+                    Double val = c.register.get(l(a));
+                    return val != null ? val : 0;
                 })
         ).collect(Collectors.toMap(f -> f.getLeft().getName(), Lambdas.identity()));
-        ops = Stream.<Pair<Operator, ToDoubleBiFunction<Iterator<Double>, ExprContext>>>of(
+        ops = Stream.<Pair<Operator, ToDoubleBiFunction<Iterator<Double>, ExpressionEngine>>>of(
                 Pair.of(new Operator("|", 2, Operator.Associativity.LEFT, 3), (a, c) ->
                         l(a) | l(a)
                 ),
@@ -141,14 +153,14 @@ public class ExpressionEngine extends DoubleEvaluator {
 
     @Override
     protected Double evaluate(Function function, Iterator<Double> args, Object ctx) {
-        Pair<Function, ToDoubleBiFunction<Iterator<Double>, ExprContext>> func = funcs.get(function.getName());
-        return func != null ? func.getRight().applyAsDouble(args, gctx) : super.evaluate(function, args, ctx);
+        Pair<Function, ToDoubleBiFunction<Iterator<Double>, ExpressionEngine>> func = funcs.get(function.getName());
+        return func != null ? func.getRight().applyAsDouble(args, this) : super.evaluate(function, args, ctx);
     }
 
     @Override
     protected Double evaluate(Operator operator, Iterator<Double> args, Object ctx) {
-        Pair<Operator, ToDoubleBiFunction<Iterator<Double>, ExprContext>> op = ops.get(operator.getSymbol());
-        return op != null ? op.getRight().applyAsDouble(args, gctx) : super.evaluate(operator, args, ctx);
+        Pair<Operator, ToDoubleBiFunction<Iterator<Double>, ExpressionEngine>> op = ops.get(operator.getSymbol());
+        return op != null ? op.getRight().applyAsDouble(args, this) : super.evaluate(operator, args, ctx);
     }
 
     private static double d(Iterator<Double> d) {

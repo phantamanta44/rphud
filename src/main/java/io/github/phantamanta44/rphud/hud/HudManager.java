@@ -47,6 +47,7 @@ public class HudManager {
         components.clear();
         eval.exitContext();
         eval.defined.clear();
+        eval.register.clear();
         failed = false;
     }
 
