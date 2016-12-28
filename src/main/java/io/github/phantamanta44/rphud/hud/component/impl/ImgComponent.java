@@ -29,8 +29,8 @@ public class ImgComponent extends AbstractComponent {
         this.shExpr = cfg.get("sectionheight");
         this.aExpr = cfg.get("opacity");
         this.resource = new ResourceLocation(cfg.getString("source"));
-        this.texWidth = cfg.getInt("texturewidth");
-        this.texHeight = cfg.getInt("textureheight");
+        this.texWidth = cfg.has("texturewidth") ? cfg.getInt("texturewidth") : -1;
+        this.texHeight = cfg.has("textureheight") ? cfg.getInt("textureheight") : -1;
     }
 
     @Override
@@ -43,12 +43,14 @@ public class ImgComponent extends AbstractComponent {
         int v = vExpr != null ? eval.evalInt(vExpr) : 0;
         int sw = swExpr != null ? eval.evalInt(swExpr) : w;
         int sh = shExpr != null ? eval.evalInt(shExpr) : h;
+        int tw = texWidth != -1 ? texWidth : w;
+        int th = texHeight != -1 ? texHeight : h;
         float a = aExpr != null ? eval.evalFloat(aExpr) : 1;
         x = align.offsetX(x, w, res.getScaledWidth());
         y = align.offsetY(y, h, res.getScaledHeight());
         mc.renderEngine.bindTexture(resource);
         Renders.alpha(a);
-        Renders.textureUnderHud(x, y, u, v, w, h, sw, sh, texWidth, texHeight);
+        Renders.textureUnderHud(x, y, u, v, w, h, sw, sh, tw, th);
         Renders.alpha(1F);
     }
 
