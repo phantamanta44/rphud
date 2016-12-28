@@ -11,10 +11,16 @@ import java.util.function.DoubleSupplier;
 
 public class ExprContext {
 
+    public final GuiIngame gui;
+    public final EntityPlayer pl;
+    public final ScaledResolution res;
     protected final Map<String, DoubleSupplier> vars;
 
     public ExprContext(GuiIngame gui, EntityPlayer pl, ScaledResolution res) {
-        vars = new HashMap<>();
+        this.gui = gui;
+        this.pl = pl;
+        this.res = res;
+        this.vars = new HashMap<>();
         vars.put("systime", System::currentTimeMillis);
         vars.put("time", pl.getEntityWorld()::getWorldTime);
         vars.put("daytime", () -> pl.getEntityWorld().getWorldTime() % 24000L);
@@ -25,6 +31,12 @@ public class ExprContext {
         vars.put("xp", () -> pl.experience);
         vars.put("level", () -> pl.experienceLevel);
         vars.put("score", pl::getScore);
+        vars.put("x", () -> pl.posX);
+        vars.put("y", () -> pl.posY);
+        vars.put("z", () -> pl.posZ);
+        vars.put("pitch", () -> pl.rotationPitch);
+        vars.put("yaw", () -> pl.rotationYaw);
+        vars.put("angle", () -> (630D - (pl.rotationYaw % 360D)) % 360D);
         FoodStats fs = pl.getFoodStats();
         vars.put("food", fs::getFoodLevel);
         vars.put("food_max", () -> 20D);
