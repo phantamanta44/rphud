@@ -12,8 +12,9 @@ import net.minecraft.util.ResourceLocation;
 public class ImgComponent extends AbstractComponent {
 
     private final ScreenAlign align;
-    private final String xExpr, yExpr, wExpr, hExpr, uExpr, vExpr, twExpr, thExpr, aExpr;
+    private final String xExpr, yExpr, wExpr, hExpr, uExpr, vExpr, swExpr, shExpr, aExpr;
     private final ResourceLocation resource;
+    private final int texWidth, texHeight;
 
     public ImgComponent(DeserializingMap cfg) {
         super(cfg);
@@ -24,10 +25,12 @@ public class ImgComponent extends AbstractComponent {
         this.hExpr = cfg.getString("height");
         this.uExpr = cfg.get("u");
         this.vExpr = cfg.get("v");
-        this.twExpr = cfg.get("texturewidth");
-        this.thExpr = cfg.get("textureheight");
+        this.swExpr = cfg.get("sectionwidth");
+        this.shExpr = cfg.get("sectionheight");
         this.aExpr = cfg.get("opacity");
         this.resource = new ResourceLocation(cfg.getString("source"));
+        this.texWidth = cfg.getInt("texturewidth");
+        this.texHeight = cfg.getInt("textureheight");
     }
 
     @Override
@@ -38,14 +41,14 @@ public class ImgComponent extends AbstractComponent {
         int h = eval.evalInt(hExpr);
         int u = uExpr != null ? eval.evalInt(uExpr) : 0;
         int v = vExpr != null ? eval.evalInt(vExpr) : 0;
-        int tw = twExpr != null ? eval.evalInt(twExpr) : w;
-        int th = thExpr != null ? eval.evalInt(thExpr) : h;
+        int sw = swExpr != null ? eval.evalInt(swExpr) : w;
+        int sh = shExpr != null ? eval.evalInt(shExpr) : h;
         float a = aExpr != null ? eval.evalFloat(aExpr) : 1;
         x = align.offsetX(x, w, res.getScaledWidth());
         y = align.offsetY(y, h, res.getScaledHeight());
         mc.renderEngine.bindTexture(resource);
         Renders.alpha(a);
-        Renders.textureUnderHud(x, y, u, v, w, h, tw, th);
+        Renders.textureUnderHud(x, y, u, v, w, h, sw, sh, texWidth, texHeight);
         Renders.alpha(1F);
     }
 

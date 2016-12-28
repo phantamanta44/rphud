@@ -4,6 +4,7 @@ import io.github.phantamanta44.rphud.RPHud;
 import io.github.phantamanta44.rphud.hud.component.IComponent;
 import io.github.phantamanta44.rphud.hud.component.IComponentProvider;
 import io.github.phantamanta44.rphud.hud.component.SimpleComponentProvider;
+import io.github.phantamanta44.rphud.hud.component.impl.IconBarComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.ImgComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.RectComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.TextComponent;
@@ -16,19 +17,19 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HudManager {
 
     private static final Map<String, IComponentProvider> providers;
 
     static {
-        List<IComponentProvider> providerList = Arrays.asList(
+        providers = Stream.of(
                 new SimpleComponentProvider("text", TextComponent::new),
                 new SimpleComponentProvider("rect", RectComponent::new),
-                new SimpleComponentProvider("img", ImgComponent::new)
-        );
-        providers = providerList.stream()
-                .collect(Collectors.toMap(IComponentProvider::getName, Lambdas.identity()));
+                new SimpleComponentProvider("img", ImgComponent::new),
+                new SimpleComponentProvider("iconbar", IconBarComponent::new)
+        ).collect(Collectors.toMap(IComponentProvider::getName, Lambdas.identity()));
     }
 
     private final Minecraft mc;
