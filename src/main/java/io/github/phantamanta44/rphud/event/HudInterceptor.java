@@ -8,11 +8,15 @@ public class HudInterceptor {
 
     @SubscribeEvent
     public void onRender(RenderGameOverlayEvent.Pre event) {
-        if (RPHud.INSTANCE.getRenderer().shouldCancel(event.getType()))
+        if (RPHud.INSTANCE.getRenderer().shouldCancel(event.type))
             event.setCanceled(true);
-        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR)
+        if (event.type == RenderGameOverlayEvent.ElementType.HOTBAR)
             RPHud.INSTANCE.getRenderer().doRender(false);
-        else if (event.getType() == RenderGameOverlayEvent.ElementType.SUBTITLES)
+    }
+
+    @SubscribeEvent
+    public void onRenderDone(RenderGameOverlayEvent.Post event) {
+        if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
             RPHud.INSTANCE.getRenderer().doRender(true);
     }
 

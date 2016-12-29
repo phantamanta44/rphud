@@ -2,7 +2,7 @@ package io.github.phantamanta44.rphud.util;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class Renders {
@@ -51,12 +51,12 @@ public class Renders {
 
     public static void texture(int x, int y, int u, int v, int w, int h, int sw, int sh, int tw, int th, double z) {
         Tessellator tess = Tessellator.getInstance();
-        VertexBuffer vb = tess.getBuffer();
-        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vb.pos(x    , y + h, z).tex((double) u / tw      , (double)(v + sh) / th).endVertex();
-        vb.pos(x + w, y + h, z).tex((double)(u + sw) / tw, (double)(v + sh) / th).endVertex();
-        vb.pos(x + w, y    , z).tex((double)(u + sw) / tw, (double) v / th      ).endVertex();
-        vb.pos(x    , y    , z).tex((double) u / tw      , (double) v / th      ).endVertex();
+        WorldRenderer wr = tess.getWorldRenderer();
+        wr.begin(7, DefaultVertexFormats.POSITION_TEX);
+        wr.pos(x    , y + h, z).tex((double) u / tw      , (double)(v + sh) / th).endVertex();
+        wr.pos(x + w, y + h, z).tex((double)(u + sw) / tw, (double)(v + sh) / th).endVertex();
+        wr.pos(x + w, y    , z).tex((double)(u + sw) / tw, (double) v / th      ).endVertex();
+        wr.pos(x    , y    , z).tex((double) u / tw      , (double) v / th      ).endVertex();
         tess.draw();
     }
 
