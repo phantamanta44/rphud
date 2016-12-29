@@ -4,7 +4,7 @@
 Gives you the ability to modify the HUD using a text file.
 
 ## Documentation
-Check out documentation on [the Wiki](github.com/phantamanta44/rphud/wiki).
+Check out documentation on [the Wiki](https://github.com/phantamanta44/rphud/wiki).
 
 ## Examples
 ![](http://i.imgur.com/H3oGuDe.jpg)
