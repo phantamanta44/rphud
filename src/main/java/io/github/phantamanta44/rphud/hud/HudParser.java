@@ -1,20 +1,32 @@
 package io.github.phantamanta44.rphud.hud;
 
+import io.github.phantamanta44.rphud.RPHConst;
 import io.github.phantamanta44.rphud.util.DeserializingMap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.io.IOUtils;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class HudParser {
 
     private static final String VALID_VAR_NAMES = "[\\w_]+";
 
+    private final Minecraft mc;
     private Consumer<String> onCancel;
     private BiConsumer<String, String> onDefinition;
     private BiConsumer<String, DeserializingMap> onComponent;
+
+    public HudParser() {
+        this.mc = Minecraft.getMinecraft();
+    }
 
     public HudParser withCancelHandler(Consumer<String> handler) {
         this.onCancel = handler;
@@ -32,9 +44,9 @@ public class HudParser {
     }
 
     public void parse(List<String> cfgFile) {
-        BiConsumer<String, HudParser> scope = null;
-        for (String line : cfgFile) {
-            line = line.trim();
+        BiFunction<String, HudParser, List<String>> scope = null;
+        for (int i = 0; i < cfgFile.size(); i++) {
+            String line = cfgFile.get(i).trim();
             if (line.isEmpty() || line.startsWith("#"))
                 continue;
             if (line.startsWith("-") && line.endsWith("-")) {
@@ -43,12 +55,14 @@ public class HudParser {
             } else {
                 if (scope == null)
                     throw new IllegalArgumentException("Encountered line before scope definition: " + line);
-                scope.accept(line, this);
+                List<String> result = scope.apply(line, this);
+                if (result != null)
+                    cfgFile.addAll(i, result);
             }
         }
     }
 
-    private BiConsumer<String, HudParser> getScope(String name) {
+    private BiFunction<String, HudParser, List<String>> getScope(String name) {
         switch (name.toLowerCase()) {
             case "cancels":
                 return new CancelScope();
@@ -56,23 +70,26 @@ public class HudParser {
                 return new DefinitionScope();
             case "components":
                 return new ComponentScope();
+            case "imports":
+                return new ImportScope();
         }
         throw new IllegalArgumentException("No such scope: " + name);
     }
 
-    private static class CancelScope implements BiConsumer<String, HudParser> {
+    private static class CancelScope implements BiFunction<String, HudParser, List<String>> {
 
         @Override
-        public void accept(String line, HudParser parser) {
+        public List<String> apply(String line, HudParser parser) {
             parser.onCancel.accept(line);
+            return null;
         }
 
     }
 
-    private static class DefinitionScope implements BiConsumer<String, HudParser> {
+    private static class DefinitionScope implements BiFunction<String, HudParser, List<String>> {
 
         @Override
-        public void accept(String line, HudParser parser) {
+        public List<String> apply(String line, HudParser parser) {
             int eq = line.indexOf("=");
             if (eq == -1)
                 throw new IllegalArgumentException("Expected an equals in declaration statement: " + line);
@@ -80,17 +97,18 @@ public class HudParser {
             if (!key.matches(VALID_VAR_NAMES))
                 throw new IllegalArgumentException("Illegal declared name: " + key);
             parser.onDefinition.accept(key, line.substring(eq + 1).trim());
+            return null;
         }
 
     }
 
-    private static class ComponentScope implements BiConsumer<String, HudParser> {
+    private static class ComponentScope implements BiFunction<String, HudParser, List<String>> {
 
         private String componentName = null;
         private Map<String, String> props = null;
 
         @Override
-        public void accept(String line, HudParser parser) {
+        public List<String> apply(String line, HudParser parser) {
             if (componentName == null) {
                 componentName = line;
                 props = new HashMap<>();
@@ -103,6 +121,23 @@ public class HudParser {
                 if (eq == -1)
                     throw new IllegalArgumentException("Expected an equals in property statement: " + line);
                 props.put(line.substring(0, eq).trim(), line.substring(eq + 1).trim());
+            }
+            return null;
+        }
+
+    }
+
+    private static class ImportScope implements BiFunction<String, HudParser, List<String>> {
+
+        @Override
+        public List<String> apply(String line, HudParser parser) {
+            try {
+                ResourceLocation loc = new ResourceLocation(RPHConst.MOD_ID, line);
+                return IOUtils.readLines(parser.mc.getResourceManager().getResource(loc).getInputStream());
+            } catch (FileNotFoundException e) {
+                throw new IllegalArgumentException("No such importable file: " + line);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
 

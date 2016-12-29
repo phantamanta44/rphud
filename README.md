@@ -8,7 +8,7 @@ Check out documentation on [the Wiki](github.com/phantamanta44/rphud/wiki).
 
 ## Examples
 ![](http://i.imgur.com/H3oGuDe.jpg)
-```
+```r
 - cancels -
 
 health
@@ -117,29 +117,29 @@ a2 = (angle + 630) % 360
 - components -
 
 img
-    align         = bottom
-    x             = 0
-    y             = 41
-    width         = 182
-    height        = 12
-    u             = 182 * -a2 / 180
-    texturewidth  = 364
-    source        = rphud:compass.png
+    align        = bottom
+    x            = 0
+    y            = 41
+    width        = 182
+    height       = 12
+    u            = 182 * -a2 / 180
+    texturewidth = 364
+    source       = rphud:compass.png
 end
 rect
-    align     = bottom
-    x         = -91
-    y         = 53
-    width     = 1
-    height    = 4
+    align  = bottom
+    x      = -91
+    y      = 53
+    width  = 1
+    height = 4
     colour = fo_green
 end
 rect
-    align     = bottom
-    x         = 90
-    y         = 53
-    width     = 1
-    height    = 4
+    align  = bottom
+    x      = 90
+    y      = 53
+    width  = 1
+    height = 4
     colour = fo_green
 end
 ```
