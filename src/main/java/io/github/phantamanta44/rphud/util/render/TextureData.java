@@ -1,4 +1,4 @@
-package io.github.phantamanta44.rphud.util;
+package io.github.phantamanta44.rphud.util.render;
 
 public class TextureData {
 

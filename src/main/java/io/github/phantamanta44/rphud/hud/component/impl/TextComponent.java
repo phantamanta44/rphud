@@ -3,7 +3,7 @@ package io.github.phantamanta44.rphud.hud.component.impl;
 import io.github.phantamanta44.rphud.hud.ExpressionEngine;
 import io.github.phantamanta44.rphud.hud.component.AbstractComponent;
 import io.github.phantamanta44.rphud.util.DeserializingMap;
-import io.github.phantamanta44.rphud.util.ScreenAlign;
+import io.github.phantamanta44.rphud.util.math.ScreenAlign;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 

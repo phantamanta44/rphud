@@ -3,7 +3,8 @@ package io.github.phantamanta44.rphud.hud.component.impl;
 import io.github.phantamanta44.rphud.hud.ExpressionEngine;
 import io.github.phantamanta44.rphud.hud.component.AbstractComponent;
 import io.github.phantamanta44.rphud.util.DeserializingMap;
-import io.github.phantamanta44.rphud.util.ScreenAlign;
+import io.github.phantamanta44.rphud.util.math.ScreenAlign;
+import io.github.phantamanta44.rphud.util.render.Renders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -32,7 +33,10 @@ public class RectComponent extends AbstractComponent {
         int colour = eval.evalInt(colExpr);
         x = align.offsetX(x, w, res.getScaledWidth());
         y = align.offsetY(y, h, res.getScaledHeight());
-        Gui.drawRect(x, y, x + w, y + h, colour);
+        if (underHud)
+            Renders.rectUnderHud(x, y, w, h, colour);
+        else
+            Renders.rectOverHud(x, y, w, h, colour);
     }
 
 }

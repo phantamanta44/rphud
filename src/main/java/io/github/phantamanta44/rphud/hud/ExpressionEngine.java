@@ -1,18 +1,15 @@
 package io.github.phantamanta44.rphud.hud;
 
 import com.fathzer.soft.javaluator.*;
-import io.github.phantamanta44.rphud.util.Inventories;
-import io.github.phantamanta44.rphud.util.ItemSig;
-import io.github.phantamanta44.rphud.util.Lambdas;
-import net.minecraft.item.ItemStack;
+import io.github.phantamanta44.rphud.util.inventory.Inventories;
+import io.github.phantamanta44.rphud.util.inventory.ItemSig;
+import io.github.phantamanta44.rphud.util.function.Lambdas;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.function.DoubleSupplier;
 import java.util.function.ToDoubleBiFunction;
-import java.util.function.ToDoubleFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;

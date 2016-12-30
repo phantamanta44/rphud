@@ -1,4 +1,4 @@
-package io.github.phantamanta44.rphud.util;
+package io.github.phantamanta44.rphud.util.inventory;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

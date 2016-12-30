@@ -1,4 +1,4 @@
-package io.github.phantamanta44.rphud.util;
+package io.github.phantamanta44.rphud.util.function;
 
 import java.util.Objects;
 import java.util.function.Function;

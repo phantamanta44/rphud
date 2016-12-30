@@ -1,5 +1,6 @@
-package io.github.phantamanta44.rphud.util;
+package io.github.phantamanta44.rphud.util.render;
 
+import io.github.phantamanta44.rphud.RPHud;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -58,6 +59,34 @@ public class Renders {
         wr.pos(x + w, y    , z).tex((double)(u + sw) / tw, (double) v / th      ).endVertex();
         wr.pos(x    , y    , z).tex((double) u / tw      , (double) v / th      ).endVertex();
         tess.draw();
+    }
+
+    public static void rectOverHud(int x, int y, int w, int h, int colour) {
+        rect(x, y, w, h, colour, 0);
+    }
+
+    public static void rectUnderHud(int x, int y, int w, int h, int colour) {
+        rect(x, y, w, h, colour, -100);
+    }
+
+    public static void rect(int x, int y, int w, int h, int colour, double z) {
+        int r = (colour >> 16) & 255;
+        int g = (colour >> 8) & 255;
+        int b = colour & 255;
+        int a = (colour >> 24) & 255;
+        GlStateManager.disableTexture2D();
+        GlStateManager.color(r / 255F, g / 255F, b / 255F, a / 255F);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        Tessellator tess = Tessellator.getInstance();
+        WorldRenderer wr = tess.getWorldRenderer();
+        wr.begin(7, DefaultVertexFormats.POSITION);
+        wr.pos(x    , y + h, z).endVertex();
+        wr.pos(x + w, y + h, z).endVertex();
+        wr.pos(x + w, y    , z).endVertex();
+        wr.pos(x    , y    , z).endVertex();
+        tess.draw();
+        alpha(1F);
+        GlStateManager.enableTexture2D();
     }
 
 }

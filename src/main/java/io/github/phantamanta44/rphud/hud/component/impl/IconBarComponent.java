@@ -1,9 +1,14 @@
 package io.github.phantamanta44.rphud.hud.component.impl;
 
-import io.github.phantamanta44.rphud.RPHud;
 import io.github.phantamanta44.rphud.hud.ExpressionEngine;
 import io.github.phantamanta44.rphud.hud.component.AbstractComponent;
 import io.github.phantamanta44.rphud.util.*;
+import io.github.phantamanta44.rphud.util.math.OrthoDir;
+import io.github.phantamanta44.rphud.util.math.OrthoDirOffset;
+import io.github.phantamanta44.rphud.util.math.ScreenAlign;
+import io.github.phantamanta44.rphud.util.render.ITextureDataRenderer;
+import io.github.phantamanta44.rphud.util.render.Renders;
+import io.github.phantamanta44.rphud.util.render.TextureData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
@@ -90,6 +95,7 @@ public class IconBarComponent extends AbstractComponent {
         y = align.offsetY(y, offset.offsetY(y, dir, count) + h, res.getScaledHeight());
         Supplier<Pair<Integer, Integer>> coordSupplier = offset.offsets(x, y, dir);
         mc.renderEngine.bindTexture(resource);
+        ITextureDataRenderer renderer = underHud ? Renders::textureUnderHud : Renders::textureOverHud;
         Renders.alpha(a);
         if (halfVals) {
             TextureData texH = new TextureData(
@@ -102,20 +108,20 @@ public class IconBarComponent extends AbstractComponent {
                 double t2 = (double)(i * 2 + 2) / (count * 2);
                 Pair<Integer, Integer> coords = coordSupplier.get();
                 if (val >= t2)
-                    Renders.textureOverHud(coords.getLeft(), coords.getRight(), w, h, texF);
+                    renderer.render(coords.getLeft(), coords.getRight(), w, h, texF);
                 else if (val >= t1)
-                    Renders.textureOverHud(coords.getLeft(), coords.getRight(), w, h, texH);
+                    renderer.render(coords.getLeft(), coords.getRight(), w, h, texH);
                 else if (showEmpty)
-                    Renders.textureOverHud(coords.getLeft(), coords.getRight(), w, h, texE);
+                    renderer.render(coords.getLeft(), coords.getRight(), w, h, texE);
             }
         } else {
             for (int i = 0; i < count; i++) {
                 double thresh = (double)(i + 1) / count;
                 Pair<Integer, Integer> coords = coordSupplier.get();
                 if (val >= thresh)
-                    Renders.textureOverHud(coords.getLeft(), coords.getRight(), w, h, texF);
+                    renderer.render(coords.getLeft(), coords.getRight(), w, h, texF);
                 else if (showEmpty)
-                    Renders.textureOverHud(coords.getLeft(), coords.getRight(), w, h, texE);
+                    renderer.render(coords.getLeft(), coords.getRight(), w, h, texE);
             }
         }
         Renders.alpha(1F);

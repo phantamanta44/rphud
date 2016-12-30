@@ -1,4 +1,4 @@
-package io.github.phantamanta44.rphud.util;
+package io.github.phantamanta44.rphud.util.math;
 
 import org.apache.commons.lang3.tuple.Pair;
 

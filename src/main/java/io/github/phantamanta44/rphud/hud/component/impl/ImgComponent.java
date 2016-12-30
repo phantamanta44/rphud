@@ -3,8 +3,8 @@ package io.github.phantamanta44.rphud.hud.component.impl;
 import io.github.phantamanta44.rphud.hud.ExpressionEngine;
 import io.github.phantamanta44.rphud.hud.component.AbstractComponent;
 import io.github.phantamanta44.rphud.util.DeserializingMap;
-import io.github.phantamanta44.rphud.util.Renders;
-import io.github.phantamanta44.rphud.util.ScreenAlign;
+import io.github.phantamanta44.rphud.util.render.Renders;
+import io.github.phantamanta44.rphud.util.math.ScreenAlign;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
@@ -50,7 +50,10 @@ public class ImgComponent extends AbstractComponent {
         y = align.offsetY(y, h, res.getScaledHeight());
         mc.renderEngine.bindTexture(resource);
         Renders.alpha(a);
-        Renders.textureUnderHud(x, y, u, v, w, h, sw, sh, tw, th);
+        if (underHud)
+            Renders.textureUnderHud(x, y, u, v, w, h, sw, sh, tw, th);
+        else
+            Renders.textureOverHud(x, y, u, v, w, h, sw, sh, tw, th);
         Renders.alpha(1F);
     }
 

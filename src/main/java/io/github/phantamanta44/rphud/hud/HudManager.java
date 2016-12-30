@@ -8,7 +8,7 @@ import io.github.phantamanta44.rphud.hud.component.impl.IconBarComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.ImgComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.RectComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.TextComponent;
-import io.github.phantamanta44.rphud.util.Lambdas;
+import io.github.phantamanta44.rphud.util.function.Lambdas;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
