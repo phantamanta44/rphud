@@ -101,7 +101,8 @@ public class HudManager {
             eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
             components.stream().filter(c -> c.renderUnderHud() != afterHud).forEach(c -> {
                 try {
-                    c.render(mc, res, eval);
+                    if (c.shouldRender(mc, res, eval))
+                        c.render(mc, res, eval);
                 } catch (Exception e) {
                     RPHud.error("Encountered {} while rendering component {}!",
                             e.getClass().getSimpleName(),

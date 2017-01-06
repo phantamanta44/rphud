@@ -1,6 +1,5 @@
 package io.github.phantamanta44.rphud.util.render;
 
-import io.github.phantamanta44.rphud.RPHud;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;

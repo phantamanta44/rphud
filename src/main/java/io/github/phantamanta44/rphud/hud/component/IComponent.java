@@ -10,4 +10,6 @@ public interface IComponent {
 
     boolean renderUnderHud();
 
+    boolean shouldRender(Minecraft mc, ScaledResolution res, ExpressionEngine eval);
+
 }

@@ -4,6 +4,9 @@ import com.fathzer.soft.javaluator.*;
 import io.github.phantamanta44.rphud.util.inventory.Inventories;
 import io.github.phantamanta44.rphud.util.inventory.ItemSig;
 import io.github.phantamanta44.rphud.util.function.Lambdas;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.fml.common.registry.GameData;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.awt.*;
@@ -116,6 +119,17 @@ public class ExpressionEngine extends DoubleEvaluator {
                             .filter(sig::matches)
                             .mapToInt(is -> is.stackSize)
                             .sum();
+                }),
+                Pair.of(new Function("potactive", 1), (a, c) ->
+                        c.gctx.pl.isPotionActive(i(a)) ? 1D : 0D
+                ),
+                Pair.of(new Function("pottime", 1), (a, c) -> {
+                    PotionEffect pot = c.gctx.pl.getActivePotionEffect(GameData.getPotionRegistry().getObjectById(i(a)));
+                    return pot != null ? pot.getDuration() : -1;
+                }),
+                Pair.of(new Function("potlevel", 1), (a, c) -> {
+                    PotionEffect pot = c.gctx.pl.getActivePotionEffect(GameData.getPotionRegistry().getObjectById(i(a)));
+                    return pot != null ? pot.getAmplifier() : -1;
                 }),
                 Pair.of(new Function("put", 2), (a, c) -> {
                     Double val = c.register.put(l(a), d(a));
