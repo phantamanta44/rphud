@@ -57,7 +57,7 @@ public class HudParser {
                     throw new IllegalArgumentException("Encountered line before scope definition: " + line);
                 List<String> result = scope.apply(line, this);
                 if (result != null)
-                    cfgFile.addAll(i, result);
+                    cfgFile.addAll(i + 1, result);
             }
         }
     }
@@ -133,7 +133,9 @@ public class HudParser {
         public List<String> apply(String line, HudParser parser) {
             try {
                 ResourceLocation loc = new ResourceLocation(RPHConst.MOD_ID, line);
-                return IOUtils.readLines(parser.mc.getResourceManager().getResource(loc).getInputStream());
+                List<String> lines = IOUtils.readLines(parser.mc.getResourceManager().getResource(loc).getInputStream());
+                lines.add("-imports-");
+                return lines;
             } catch (FileNotFoundException e) {
                 throw new IllegalArgumentException("No such importable file: " + line);
             } catch (IOException e) {

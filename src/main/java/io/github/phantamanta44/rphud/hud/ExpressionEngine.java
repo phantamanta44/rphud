@@ -107,6 +107,9 @@ public class ExpressionEngine extends DoubleEvaluator {
                 Pair.of(new Function("ne", 2), (a, c) ->
                         (d(a) != d(a)) ? 1D : 0D
                 ),
+                Pair.of(new Function("xor", 2), (a, c) ->
+                        l(a) ^ l(a)
+                ),
                 Pair.of(new Function("deg2rad", 1), (a, c) ->
                         Math.PI * d(a) / 180
                 ),

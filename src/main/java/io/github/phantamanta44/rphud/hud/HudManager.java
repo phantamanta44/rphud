@@ -1,6 +1,9 @@
 package io.github.phantamanta44.rphud.hud;
 
 import io.github.phantamanta44.rphud.RPHud;
+import io.github.phantamanta44.rphud.hud.cancel.ConditionalCancel;
+import io.github.phantamanta44.rphud.hud.cancel.ICancel;
+import io.github.phantamanta44.rphud.hud.cancel.PermanentCancel;
 import io.github.phantamanta44.rphud.hud.component.IComponent;
 import io.github.phantamanta44.rphud.hud.component.IComponentProvider;
 import io.github.phantamanta44.rphud.hud.component.SimpleComponentProvider;
@@ -33,7 +36,7 @@ public class HudManager {
     }
 
     private final Minecraft mc;
-    private final Set<RenderGameOverlayEvent.ElementType> toCancel = new HashSet<>();
+    private final Set<ICancel> toCancel = new HashSet<>();
     private final ExpressionEngine eval = new ExpressionEngine();
     private final List<IComponent> components = new ArrayList<>();
     private boolean failed = false;
@@ -58,16 +61,11 @@ public class HudManager {
             new HudParser().withDefinitionHandler((n, e) ->
                 eval.defined.add(Pair.of(n, e))
             ).withCancelHandler(c -> {
-                try {
-                    try {
-                        toCancel.add(RenderGameOverlayEvent.ElementType.valueOf(c.toUpperCase().replaceAll(" ", "")));
-                    } catch (IllegalArgumentException e) {
-                        toCancel.add(RenderGameOverlayEvent.ElementType.valueOf(c.toUpperCase().replaceAll(" ", "_")));
-                    }
-                } catch (Exception e) {
-                    RPHud.warn("Errored on cancel directive!");
-                    RPHud.getLogger().warn(e);
-                    failed.setTrue();
+                if (c.contains("=")) {
+                    String[] parts = c.split("=", 2);
+                    toCancel.add(new ConditionalCancel(sanitizeCancel(parts[0]), parts[1]));
+                } else {
+                    toCancel.add(new PermanentCancel(sanitizeCancel(c)));
                 }
             }).withComponentHandler((n, c) -> {
                 try {
@@ -91,8 +89,13 @@ public class HudManager {
             clearCache();
     }
 
-    public boolean shouldCancel(RenderGameOverlayEvent.ElementType type) {
-        return toCancel.contains(type);
+    public boolean shouldCancel(String name) {
+        ScaledResolution res = new ScaledResolution(mc);
+        eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
+        Collection<ICancel> cancels = toCancel.stream()
+                .filter(c -> c.getName().equalsIgnoreCase(sanitizeCancel(name)))
+                .collect(Collectors.toSet());
+        return !cancels.isEmpty() && cancels.stream().allMatch(c -> c.shouldCancel(mc, res, eval));
     }
 
     public void doRender(boolean afterHud) {
@@ -113,6 +116,10 @@ public class HudManager {
             });
             eval.exitContext();
         }
+    }
+
+    private static String sanitizeCancel(String name) {
+        return name.replaceAll("[\\s_]+", "");
     }
 
 }

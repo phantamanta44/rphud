@@ -3,6 +3,7 @@ package io.github.phantamanta44.rphud.hud;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.FoodStats;
 
 import java.util.HashMap;
@@ -34,6 +35,11 @@ public class ExprContext {
         vars.put("x", () -> pl.posX);
         vars.put("y", () -> pl.posY);
         vars.put("z", () -> pl.posZ);
+        vars.put("vel_x", () -> pl.motionX);
+        vars.put("vel_y", () -> pl.motionY);
+        vars.put("vel_z", () -> pl.motionZ);
+        vars.put("sneaking", () -> pl.isSneaking() ? 1D : 0D);
+        vars.put("sprinting", () -> pl.isSprinting() ? 1D : 0D);
         vars.put("pitch", () -> pl.rotationPitch);
         vars.put("yaw", () -> pl.rotationYaw);
         vars.put("angle", () -> (630D - (pl.rotationYaw % 360D)) % 360D);
@@ -41,6 +47,8 @@ public class ExprContext {
         vars.put("food", fs::getFoodLevel);
         vars.put("food_max", () -> 20D);
         vars.put("sat", fs::getSaturationLevel);
+        vars.put("held_item", () -> pl.getHeldItem() != null ? Item.getIdFromItem(pl.getHeldItem().getItem()) : 0);
+        vars.put("held_count", () -> pl.getHeldItem() != null ? pl.getHeldItem().stackSize : 0D);
     }
 
 }
