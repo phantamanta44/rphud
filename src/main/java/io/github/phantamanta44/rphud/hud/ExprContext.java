@@ -48,6 +48,7 @@ public class ExprContext {
         vars.put("food_max", () -> 20D);
         vars.put("sat", fs::getSaturationLevel);
         vars.put("held_item", () -> pl.getHeldItem() != null ? Item.getIdFromItem(pl.getHeldItem().getItem()) : 0);
+        vars.put("held_meta", () -> pl.getHeldItem() != null ? pl.getHeldItem().getItemDamage() : 0);
         vars.put("held_count", () -> pl.getHeldItem() != null ? pl.getHeldItem().stackSize : 0D);
     }
 

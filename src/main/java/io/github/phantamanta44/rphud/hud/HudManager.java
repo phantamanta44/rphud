@@ -12,6 +12,7 @@ import io.github.phantamanta44.rphud.hud.component.impl.ImgComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.RectComponent;
 import io.github.phantamanta44.rphud.hud.component.impl.TextComponent;
 import io.github.phantamanta44.rphud.util.function.Lambdas;
+import io.github.phantamanta44.rphud.util.render.Renders;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -104,8 +105,10 @@ public class HudManager {
             eval.context(new ExprContext(mc.ingameGUI, mc.thePlayer, res));
             components.stream().filter(c -> c.renderUnderHud() != afterHud).forEach(c -> {
                 try {
-                    if (c.shouldRender(mc, res, eval))
+                    if (c.shouldRender(mc, res, eval)) {
+                        Renders.alphaOff();
                         c.render(mc, res, eval);
+                    }
                 } catch (Exception e) {
                     RPHud.error("Encountered {} while rendering component {}!",
                             e.getClass().getSimpleName(),
